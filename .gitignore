@@ -1,5 +1,5 @@
 #Custom
-Terraform/*.lock.*
+Terraform/.terraform.lock.hcl
 
 # Local .terraform directories
 **/.terraform/*
@@ -17,7 +17,6 @@ crash.log
 #
 # example.tfvars
 Terraform/terraform.tfvars
-
 
 # Ignore override files as they are usually used to override resources locally and so
 # are not checked in
