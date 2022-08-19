@@ -2,7 +2,7 @@ terraform {
   required_providers {
     aws = {
       source = "hashicorp/aws"
-      version = "***REMOVED***"
+      version = "4.24.0"
     }
   }
 }
@@ -26,7 +26,7 @@ provider "aws" {
 }
 
 resource "aws_vpc" "stockBot-VPC" {
-  cidr_block = "***REMOVED***/16"
+  cidr_block = "172.16.0.0/16"
   tags = {
     Name = "stockBot-VPC",
     project = "stockBot"
@@ -35,8 +35,8 @@ resource "aws_vpc" "stockBot-VPC" {
 
 resource "aws_subnet" "stockBot-Subnet-Public" {
   vpc_id     = aws_vpc.stockBot-VPC.id
-  cidr_block = "***REMOVED***/24"
-  availability_zone = "***REMOVED***"
+  cidr_block = "172.16.0.0/24"
+  availability_zone = "us-east-1a"
   map_public_ip_on_launch = true
 
   tags = {
@@ -47,8 +47,8 @@ resource "aws_subnet" "stockBot-Subnet-Public" {
 
 resource "aws_subnet" "stockBot-Subnet-Private" {
   vpc_id     = aws_vpc.stockBot-VPC.id
-  cidr_block = "***REMOVED***/24"
-  availability_zone = "***REMOVED***"
+  cidr_block = "172.16.1.0/24"
+  availability_zone = "us-east-1a"
 
   tags = {
     Name = "stockBot-Subnet-Private"
@@ -91,7 +91,7 @@ resource "aws_route_table" "stockBot-RT-Public" {
   vpc_id = aws_vpc.stockBot-VPC.id
 
   route {
-    cidr_block = "***REMOVED***/0"
+    cidr_block = "0.0.0.0/0"
     gateway_id = aws_internet_gateway.stockBot-IGW.id
   }
 
@@ -107,7 +107,7 @@ resource "aws_route_table" "stockBot-RT-Private" {
   vpc_id = aws_vpc.stockBot-VPC.id
 
   route {
-    cidr_block = "***REMOVED***/0"
+    cidr_block = "0.0.0.0/0"
     gateway_id = aws_nat_gateway.stockBot-NGW.id
   }
 
@@ -139,7 +139,7 @@ resource "aws_network_acl" "stockBot-NACL-Public" {
     protocol   = "-1"
     rule_no    = 100
     action     = "allow"
-    cidr_block = "***REMOVED***/0"
+    cidr_block = "0.0.0.0/0"
     from_port  = 0
     to_port    = 0
   }
@@ -148,7 +148,7 @@ resource "aws_network_acl" "stockBot-NACL-Public" {
     protocol   = "-1"
     rule_no    = 100
     action     = "allow"
-    cidr_block = "***REMOVED***/0"
+    cidr_block = "0.0.0.0/0"
     from_port  = 0
     to_port    = 0
   }
@@ -167,7 +167,7 @@ resource "aws_network_acl" "stockBot-NACL-Private" {
     protocol   = "-1"
     rule_no    = 100
     action     = "allow"
-    cidr_block = "***REMOVED***/0"
+    cidr_block = "0.0.0.0/0"
     from_port  = 0
     to_port    = 0
   }
@@ -176,7 +176,7 @@ resource "aws_network_acl" "stockBot-NACL-Private" {
     protocol   = "-1"
     rule_no    = 100
     action     = "allow"
-    cidr_block = "***REMOVED***/0"
+    cidr_block = "0.0.0.0/0"
     from_port  = 0
     to_port    = 0
   }
@@ -208,7 +208,7 @@ resource "aws_security_group" "stockBot-SG-SSH_ICMP-Public" {
     from_port        = 22
     to_port          = 22
     protocol         = "tcp"
-    cidr_blocks      = ["***REMOVED***/32"]
+    cidr_blocks      = ["65.99.103.247/32"]
   }
 
   ingress {
@@ -216,7 +216,7 @@ resource "aws_security_group" "stockBot-SG-SSH_ICMP-Public" {
     from_port        = -1
     to_port          = -1
     protocol         = "icmp"
-    cidr_blocks      = ["***REMOVED***/32"]
+    cidr_blocks      = ["65.99.103.247/32"]
   }
 
 
@@ -224,7 +224,7 @@ resource "aws_security_group" "stockBot-SG-SSH_ICMP-Public" {
     from_port        = 0
     to_port          = 0
     protocol         = "-1"
-    cidr_blocks      = ["***REMOVED***/0"]
+    cidr_blocks      = ["0.0.0.0/0"]
   }
 
   tags = {
@@ -243,7 +243,7 @@ resource "aws_security_group" "stockBot-SG-SSH_ICMP-Private" {
     from_port        = 22
     to_port          = 22
     protocol         = "tcp"
-    cidr_blocks      = ["***REMOVED***/16"]
+    cidr_blocks      = ["172.16.0.0/16"]
   }
 
   ingress {
@@ -251,7 +251,7 @@ resource "aws_security_group" "stockBot-SG-SSH_ICMP-Private" {
     from_port        = -1
     to_port          = -1
     protocol         = "icmp"
-    cidr_blocks      = ["***REMOVED***/16"]
+    cidr_blocks      = ["172.16.0.0/16"]
   }
 
 
@@ -259,7 +259,7 @@ resource "aws_security_group" "stockBot-SG-SSH_ICMP-Private" {
     from_port        = 0
     to_port          = 0
     protocol         = "-1"
-    cidr_blocks      = ["***REMOVED***/0"]
+    cidr_blocks      = ["0.0.0.0/0"]
   }
 
   tags = {
@@ -282,7 +282,7 @@ resource "aws_network_interface" "stockBot-NI-JumpBox" {
 
 resource "aws_network_interface" "stockBot-NI-DataStream" {
   subnet_id   = aws_subnet.stockBot-Subnet-Private.id
-  private_ips = ["***REMOVED***"]
+  private_ips = ["172.16.1.100"]
 
   tags = {
     Name = "stockBot-NI-Private-DataStream"
