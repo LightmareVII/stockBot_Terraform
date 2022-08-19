@@ -1,3 +1,30 @@
+terraform {
+  required_providers {
+    aws = {
+      source = "hashicorp/aws"
+      version = "***REMOVED***"
+    }
+  }
+}
+
+variable "region" {
+  type = string
+}
+
+variable "access" {
+  type = string
+}
+
+variable "secret" {
+  type = string
+}
+
+provider "aws" {
+  region = var.region
+  access_key = var.access
+  secret_key = var.secret
+}
+
 resource "aws_vpc" "stockBot-VPC" {
   cidr_block = "***REMOVED***/16"
   tags = {
