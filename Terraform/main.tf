@@ -40,7 +40,7 @@ resource "aws_vpc" "stockBot-VPC" {
 resource "aws_subnet" "stockBot-Subnet-Public" {
   vpc_id     = aws_vpc.stockBot-VPC.id
   cidr_block = var.cidr.public
-  availability_zone = join("",[var.region, "a"])
+  availability_zone = join("",[var.creds.region, "a"])
   map_public_ip_on_launch = true
 
   tags = {
@@ -52,7 +52,7 @@ resource "aws_subnet" "stockBot-Subnet-Public" {
 resource "aws_subnet" "stockBot-Subnet-Private" {
   vpc_id     = aws_vpc.stockBot-VPC.id
   cidr_block = var.cidr.private
-  availability_zone = join("",[var.region, "a"])
+  availability_zone = join("",[var.creds.region, "a"])
 
   tags = {
     Name = "stockBot-Subnet-Private"
