@@ -7,16 +7,8 @@ terraform {
   }
 }
 
-variable "region" {
-  type = string
-}
-
-variable "access" {
-  type = string
-}
-
-variable "secret" {
-  type = string
+variable "creds" {
+  type = map
 }
 
 variable "domain" {
@@ -32,9 +24,9 @@ variable "address" {
 }
 
 provider "aws" {
-  region = var.region
-  access_key = var.access
-  secret_key = var.secret
+  region = var.creds.region
+  access_key = var.creds.access
+  secret_key = var.creds.secret
 }
 
 resource "aws_vpc" "stockBot-VPC" {
