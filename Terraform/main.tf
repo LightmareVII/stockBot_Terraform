@@ -19,6 +19,18 @@ variable "secret" {
   type = string
 }
 
+variable "domain" {
+  type = string
+}
+
+variable "cidr" {
+  type = map
+}
+
+variable "address" {
+  type = map
+}
+
 provider "aws" {
   region = var.region
   access_key = var.access
@@ -26,7 +38,7 @@ provider "aws" {
 }
 
 resource "aws_vpc" "stockBot-VPC" {
-  cidr_block = "172.16.0.0/16"
+  cidr_block = var.cidr.vpc
   tags = {
     Name = "stockBot-VPC",
     project = "stockBot"
@@ -35,8 +47,8 @@ resource "aws_vpc" "stockBot-VPC" {
 
 resource "aws_subnet" "stockBot-Subnet-Public" {
   vpc_id     = aws_vpc.stockBot-VPC.id
-  cidr_block = "172.16.0.0/24"
-  availability_zone = "us-east-1a"
+  cidr_block = var.cidr.public
+  availability_zone = join("",[var.region, "a"])
   map_public_ip_on_launch = true
 
   tags = {
@@ -47,8 +59,8 @@ resource "aws_subnet" "stockBot-Subnet-Public" {
 
 resource "aws_subnet" "stockBot-Subnet-Private" {
   vpc_id     = aws_vpc.stockBot-VPC.id
-  cidr_block = "172.16.1.0/24"
-  availability_zone = "us-east-1a"
+  cidr_block = var.cidr.private
+  availability_zone = join("",[var.region, "a"])
 
   tags = {
     Name = "stockBot-Subnet-Private"
@@ -208,7 +220,7 @@ resource "aws_security_group" "stockBot-SG-SSH_ICMP-Public" {
     from_port        = 22
     to_port          = 22
     protocol         = "tcp"
-    cidr_blocks      = ["65.99.103.247/32"]
+    cidr_blocks      = [var.cidr.home]
   }
 
   ingress {
@@ -216,7 +228,7 @@ resource "aws_security_group" "stockBot-SG-SSH_ICMP-Public" {
     from_port        = -1
     to_port          = -1
     protocol         = "icmp"
-    cidr_blocks      = ["65.99.103.247/32"]
+    cidr_blocks      = [var.cidr.home]
   }
 
 
@@ -243,7 +255,7 @@ resource "aws_security_group" "stockBot-SG-SSH_ICMP-Private" {
     from_port        = 22
     to_port          = 22
     protocol         = "tcp"
-    cidr_blocks      = ["172.16.0.0/16"]
+    cidr_blocks      = [var.cidr.vpc]
   }
 
   ingress {
@@ -251,7 +263,7 @@ resource "aws_security_group" "stockBot-SG-SSH_ICMP-Private" {
     from_port        = -1
     to_port          = -1
     protocol         = "icmp"
-    cidr_blocks      = ["172.16.0.0/16"]
+    cidr_blocks      = [var.cidr.vpc]
   }
 
 
@@ -270,7 +282,7 @@ resource "aws_security_group" "stockBot-SG-SSH_ICMP-Private" {
 
 resource "aws_network_interface" "stockBot-NI-JumpBox" {
   subnet_id   = aws_subnet.stockBot-Subnet-Public.id
-  private_ips = ["172.16.0.100"]
+  private_ips = [var.address.jumpbox]
 
   security_groups = [aws_security_group.stockBot-SG-SSH_ICMP-Public.id]
 
@@ -282,7 +294,7 @@ resource "aws_network_interface" "stockBot-NI-JumpBox" {
 
 resource "aws_network_interface" "stockBot-NI-DataStream" {
   subnet_id   = aws_subnet.stockBot-Subnet-Private.id
-  private_ips = ["172.16.1.100"]
+  private_ips = [var.address.datastream]
 
   tags = {
     Name = "stockBot-NI-Private-DataStream"
@@ -344,14 +356,14 @@ resource "aws_instance" "stockBot-DataStream" {
   }
 }
 
-data "aws_route53_zone" "HeroesReward" {
-  name         = "heroesreward.com."
+data "aws_route53_zone" "zone" {
+  name         = join("", [var.domain, "."])
   private_zone = false
 }
 
 resource "aws_route53_record" "stockBot-JumpBox-A_Record" {
-  zone_id = data.aws_route53_zone.HeroesReward.zone_id
-  name    = "aws.${data.aws_route53_zone.HeroesReward.name}"
+  zone_id = data.aws_route53_zone.zone.zone_id
+  name    = "aws.${data.aws_route53_zone.zone.name}"
   type    = "A"
   ttl     = 300
   records = [aws_instance.stockBot-JumpBox.public_ip]
