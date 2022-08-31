@@ -4,7 +4,7 @@
 region = "<Choose your Region>"
 access = "<Access_Key>"
 secret = "<Secret_Key>"
-domain = "<Your_Domain>"
+domain = "<Your_Domain>" # expects to have route53 already configured with your domain with base hosted zone
 
 cidr = {
   vpc = "<VPC_Subnet>/16"
