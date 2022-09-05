@@ -16,9 +16,9 @@ addressing = {
     private = "<Private_Subnet>/24"
   }
   hosts = {
-    jumpbox = "<Private_Address_of_Bastion_Host>"
+    jumpbox    = "<Private_Address_of_Bastion_Host>"
     datastream = "<Private_Address_of_Datastream_Host>"
-    home    = "<Host_You_Want_Access_From>/32" # public wan address of where you're coming from
+    home       = "<Host_You_Want_Access_From>/32" # public wan address of where you're coming from
   }
 }
 

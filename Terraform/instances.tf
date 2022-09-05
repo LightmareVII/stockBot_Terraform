@@ -2,7 +2,7 @@ resource "aws_instance" "stockBot-JumpBox" {
 
   ami           = "ami-052efd3df9dad4825"
   instance_type = "t2.micro"
-  key_name = "stockBot-KeyPair"
+  key_name      = "stockBot-KeyPair"
 
   network_interface {
     network_interface_id = aws_network_interface.stockBot-NI-JumpBox.id
@@ -20,7 +20,7 @@ resource "aws_instance" "stockBot-JumpBox" {
   EOF
 
   tags = {
-    Name = "stockBot-JumpBox"
+    Name    = "stockBot-JumpBox"
     project = "stockBot"
   }
 }
@@ -29,7 +29,7 @@ resource "aws_instance" "stockBot-DataStream" {
 
   ami           = "ami-052efd3df9dad4825"
   instance_type = "t2.micro"
-  key_name = "stockBot-KeyPair"
+  key_name      = "stockBot-KeyPair"
 
   network_interface {
     network_interface_id = aws_network_interface.stockBot-NI-DataStream.id
@@ -47,7 +47,7 @@ resource "aws_instance" "stockBot-DataStream" {
   EOF
 
   tags = {
-    Name = "stockBot-DataStream"
+    Name    = "stockBot-DataStream"
     project = "stockBot"
   }
 }

@@ -1,5 +1,5 @@
 variable "creds" {
-  type = map
+  type = map(any)
 }
 
 variable "domain" {
@@ -7,5 +7,5 @@ variable "domain" {
 }
 
 variable "addressing" {
-  type = map
+  type = map(any)
 }

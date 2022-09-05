@@ -7,7 +7,7 @@ resource "aws_route_table" "stockBot-RT-Public" {
   }
 
   tags = {
-    Name = "stockBot-RT-Public"
+    Name    = "stockBot-RT-Public"
     project = "stockBot"
   }
 
@@ -23,7 +23,7 @@ resource "aws_route_table" "stockBot-RT-Private" {
   }
 
   tags = {
-    Name = "stockBot-RT-Private"
+    Name    = "stockBot-RT-Private"
     project = "stockBot"
   }
   depends_on = [aws_nat_gateway.stockBot-NGW]
