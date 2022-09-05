@@ -21,4 +21,3 @@ addressing = {
     home       = "<Host_You_Want_Access_From>/32" # public wan address of where you're coming from
   }
 }
-

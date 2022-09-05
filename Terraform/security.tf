@@ -3,22 +3,16 @@ resource "aws_security_group" "stockBot-SG-SSH_ICMP-Private" {
   description = "Allow SSH and ICMP inbound traffic"
   vpc_id      = aws_vpc.stockBot-VPC.id
 
-  ingress {
-    description = "SSH from stockBot-VPC"
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = [var.addressing.networks.vpc]
+  dynamic "ingress" {
+    for_each = var.rules.private.ingress
+    content {
+      description = ingress.value["description"]
+      from_port   = ingress.value["from_port"]
+      to_port     = ingress.value["to_port"]
+      protocol    = ingress.value["protocol"]
+      cidr_blocks = [var.addressing.networks.vpc]
+    }
   }
-
-  ingress {
-    description = "ICMP from stockBot-VPC"
-    from_port   = -1
-    to_port     = -1
-    protocol    = "icmp"
-    cidr_blocks = [var.addressing.networks.vpc]
-  }
-
 
   egress {
     from_port   = 0
@@ -38,22 +32,16 @@ resource "aws_security_group" "stockBot-SG-SSH_ICMP-Public" {
   description = "Allow SSH and ICMP inbound traffic"
   vpc_id      = aws_vpc.stockBot-VPC.id
 
-  ingress {
-    description = "SSH from Home"
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = [var.addressing.hosts.home]
+  dynamic "ingress" {
+    for_each = var.rules.public.ingress
+    content {
+      description = ingress.value["description"]
+      from_port   = ingress.value["from_port"]
+      to_port     = ingress.value["to_port"]
+      protocol    = ingress.value["protocol"]
+      cidr_blocks = [var.addressing.hosts.home]
+    }
   }
-
-  ingress {
-    description = "ICMP from Home"
-    from_port   = -1
-    to_port     = -1
-    protocol    = "icmp"
-    cidr_blocks = [var.addressing.hosts.home]
-  }
-
 
   egress {
     from_port   = 0
