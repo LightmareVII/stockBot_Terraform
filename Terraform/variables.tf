@@ -20,7 +20,7 @@ variable "addressing" {
     hosts = object({
       jumpbox    = string
       datastream = string
-      home       = string
+      wan        = string
     })
   })
 }

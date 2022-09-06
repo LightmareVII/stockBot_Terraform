@@ -39,7 +39,7 @@ resource "aws_security_group" "stockBot-SG-SSH_ICMP-Public" {
       from_port   = ingress.value["from_port"]
       to_port     = ingress.value["to_port"]
       protocol    = ingress.value["protocol"]
-      cidr_blocks = [var.addressing.hosts.home]
+      cidr_blocks = [var.addressing.hosts.wan]
     }
   }
 
